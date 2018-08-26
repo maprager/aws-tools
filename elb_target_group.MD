@@ -33,7 +33,7 @@ nlb_target_groups:
 ```
 Create the target groups with:
 # Step1  - Create the target groups
-``
+```
 - name: Create target groups depending on type of main vpc port
   elb_target_group:
     name: "{{item['group']['prefix']}}-myvpc-tg"
