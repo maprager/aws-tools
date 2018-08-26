@@ -32,7 +32,7 @@ nlb_target_groups:
           proxy-protocol-v2: True
 ```
 Create the target groups with:
-# Step1  - Create the target groups
+## Step1  - Create the target groups
 ```
 - name: Create target groups depending on type of main vpc port
   elb_target_group:
