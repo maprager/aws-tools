@@ -8,6 +8,7 @@ Work around the problem using AWS tags -
 
 Assuming my inventory file contains the following variable:
 
+```
 nlb_target_groups:
       - group:
           prefix: HTTPS
@@ -29,9 +30,10 @@ nlb_target_groups:
           port: 8443
           type: 'instance'
           proxy-protocol-v2: True
-
+```
 Create the target groups with:
 
+``
 # Step1  - Create the target groups
 - name: Create target groups depending on type of main vpc port
   elb_target_group:
@@ -52,3 +54,4 @@ Create the target groups with:
   shell:  aws elbv2 modify-target-group-attributes --target-group-arn "{{item['target_group_arn']}}" --attributes Key=proxy_protocol_v2.enabled,Value=true
   when: item['tags']['proxy_protocol_v2_enabled'] == "True"
   with_items: "{{my_nlb_target_groups['results']}} 
+```
