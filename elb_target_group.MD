@@ -32,9 +32,8 @@ nlb_target_groups:
           proxy-protocol-v2: True
 ```
 Create the target groups with:
-
-``
 # Step1  - Create the target groups
+``
 - name: Create target groups depending on type of main vpc port
   elb_target_group:
     name: "{{item['group']['prefix']}}-myvpc-tg"
@@ -48,8 +47,9 @@ Create the target groups with:
         proxy_protocol_v2_enabled: "{{item['group']['proxy-protocol-v2']}}"
   with_items: "{{nlb_target_groups}}"
   register: my_nlb_target_groups
-  
+``` 
 ## Step 2 - Set the proxy protocol to true when necessary due to lack of support in ansible
+```
 - name: Manually alter the target group for proxy-protocol v2 if necessary
   shell:  aws elbv2 modify-target-group-attributes --target-group-arn "{{item['target_group_arn']}}" --attributes Key=proxy_protocol_v2.enabled,Value=true
   when: item['tags']['proxy_protocol_v2_enabled'] == "True"
