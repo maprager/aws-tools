@@ -15,4 +15,6 @@ Tools to be used within AWS
 
 - get_blackholes.sh - shell script to find network blackholes.
 
+- doesBucketExist.sh - Script to check to see if an S3 bucket name is available
+
 - netta_bug  - a silly song based on Israel's Eurovision Song Winner from 2018 
