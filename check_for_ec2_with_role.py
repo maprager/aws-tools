@@ -6,6 +6,7 @@ import sys
 
 if len(sys.argv) == 1:
   print "Error: Please enter a list of iam profile names"
+  print "For example: check_for_ec2_with_role.py role1 role2 role3"
   exit()
 
 filterValue=[]
