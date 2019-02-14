@@ -176,12 +176,13 @@ def printout_unused_security_groups(region,unused_sgs):
         print "Region: " , region
 	print "Number of Unused Security Groups: ", len (unused_sgs)
         #print "The unused sgs: ", unused_sgs
-	ec2_client = boto3.client('ec2', region_name=region)
-	response=ec2_client.describe_security_groups(GroupIds=unused_sgs)
-	t = PrettyTable(['Group Name', 'GroupId', 'VPC ID'] )
-        for i in response['SecurityGroups']:
-		t.add_row([i['GroupName'], i['GroupId'] , i['VpcId']] )
-        print t
+	if len(unused_sgs) != 0
+		ec2_client = boto3.client('ec2', region_name=region)
+		response=ec2_client.describe_security_groups(GroupIds=unused_sgs)
+		t = PrettyTable(['Group Name', 'GroupId', 'VPC ID'] )
+        	for i in response['SecurityGroups']:
+			t.add_row([i['GroupName'], i['GroupId'] , i['VpcId']] )
+        	print t
         return
 
 # List all regions
