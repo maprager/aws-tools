@@ -132,7 +132,6 @@ def check_rds_security_groups(region,sglist):
 def check_security_groups_for_security_groups(region,sglist):
         global DEBUG
 	### Now check within security groups - as they might list them too.
-	#aws ec2 describe-security-groups --group-ids sg-069e898c0b8e276c3 - example
 	if DEBUG: print "now check all security groups that have a security group as a source"
 	listOfSourcedSGs=[]
 	ec2_client = boto3.client('ec2', region_name=region)
