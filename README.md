@@ -18,3 +18,7 @@ Tools to be used within AWS
 - doesBucketExist.sh - Script to check to see if an S3 bucket name is available
 
 - netta_bug  - a silly song based on Israel's Eurovision Song Winner from 2018 
+
+- ms-teams.py - a lambda to notify ms teams on spot instances stops and starts and other instances
+
+- daily-cost.py - a lambda to keep a daily check on your account costs, and to notify you of any changes in ms-teams.
