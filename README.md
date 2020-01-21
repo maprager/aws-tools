@@ -21,4 +21,4 @@ Tools to be used within AWS
 
 - ms-teams.py - a lambda to notify ms teams on spot instances stops and starts and other instances
 
-- daily-cost.py - a lambda to keep a daily check on your account costs, and to notify you of any changes in ms-teams.
+- daily-cost-check.py - a lambda to keep a daily check on your account costs, and to notify you of any changes in ms-teams.
