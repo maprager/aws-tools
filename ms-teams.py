@@ -1,3 +1,6 @@
+# Lambda to send messages to a MS-Teams webhook.
+# Specifically tailored for Spot instance changes and instance changes.
+
 import json
 import logging
 import os
