@@ -29,5 +29,5 @@ After downloading:
 ```
  -   Run:
  ``` 
- ansible-playbook main.yml -e@environement.yml 
+ ansible-playbook main.yml -e@environment.yml 
 ```
