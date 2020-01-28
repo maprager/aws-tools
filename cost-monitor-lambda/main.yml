@@ -1,0 +1,3 @@
+---
+ - name: install lambda
+   import_playbook: install_lambda.yml
