@@ -1,0 +1,4 @@
+region: us-east-1
+threshold: "20"
+avgCost: "100"
+hookURL:  https://outlook.office.com/webhook/<YOUR-MSTEAMS-WEBHOOK>
