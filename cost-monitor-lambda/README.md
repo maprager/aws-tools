@@ -3,6 +3,7 @@
 ## Description
 The following code creates a cost monitoring lambda
 The lambda sends a message to a HookURL that posts warning messages to an MS-teams channel. 
+The lambda is run daily at 23:50 via a Cloudwatch Cron Schedule.
 
 ## Variables
 There are four variables that need to be set up:
@@ -28,5 +29,5 @@ After downloading:
 ```
  -   Run:
  ``` 
- ansible-playbook main.yaml -e@environement.yml 
+ ansible-playbook main.yml -e@environement.yml 
 ```
