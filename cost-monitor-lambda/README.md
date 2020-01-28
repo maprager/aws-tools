@@ -22,7 +22,7 @@ If your daily cost rises above $120 you will get an alert to the MS-Teams channe
 After downloading:
  - Create an environment.yml file for example
  ```
-    region: eu-west-1
+    region: us-east-1
     threshold: "20"
     avgCost: "100"
     hookURL:  https://outlook.office.com/webhook/<Your MS-Teams WebHook>
