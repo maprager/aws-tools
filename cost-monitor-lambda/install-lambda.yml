@@ -1,0 +1,59 @@
+---
+- name: create iam role with the correct execution values
+  hosts: localhost
+  connection: local
+  gather_facts: True
+  vars_files:
+  tasks:
+    - name: create iam role
+      iam_role:
+        name: lambda-cost-monitor-role
+        state: present
+        managed_policy:
+            - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+            - arn:aws:iam::aws:policy/job-function/SupportUser
+            - arn:aws:iam::aws:policy/AdministratorAccess
+            - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+            - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+        assume_role_policy_document: "{{ lookup('file','lambda-policy.json') }}"
+        description: "Cost Monitor IAM Role Policy"
+      register: lambdaRole
+
+    - name: archive lambda code
+      archive:
+        path: files/lambda_function.py
+        format: zip
+
+    - name: install lambda itself
+      register: myLambda
+      lambda:
+        name: daily-cost-check
+        state: present
+        role:  "{{lambdaRole.arn}}"
+        timeout: 60
+        memory_size: 128
+        region: "{{ region }}"
+        handler: lambda_function.lambda_handler
+        zip_file: files/lambda_function.py.zip
+        runtime: "python3.7"
+        environment_variables:
+              AverageCost: "{{ avgCost }}"
+              HookURL: "{{ hookURL }}"
+              Threshold: "{{ threshold }}"
+
+    - name: add cloudwatch trigger
+      cloudwatchevent_rule:
+        name: "daily-cost-review"
+        schedule_expression:  "cron(50 23 * * ? *)"
+        description: "cost check daily at 23:50"
+        targets:
+           - id: MyTargetId
+             arn: "{{ myLambda.configuration.function_arn }}"
+        region: "{{ region }}"
+        state: present
+
+    - name: delete zip file created previouly
+      file:
+        state: absent
+        path: files/lambda_function.py.zip
