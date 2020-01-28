@@ -27,7 +27,11 @@ After downloading:
     avgCost: "100"
     hookURL:  https://outlook.office.com/webhook/<Your MS-Teams WebHook>
 ```
- -   Run:
+-  Change the modes of the files to executable:
+```
+ chmod 755 files/*
+ ```
+-  Run:
  ``` 
  ansible-playbook main.yml -e@environment.yml 
 ```
