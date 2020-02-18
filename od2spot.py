@@ -132,7 +132,7 @@ NetworkInterfaces.append(dict(iface))
 hostnameCmd="#!/bin/bash " + "\n"
 hostnameCmd= hostnameCmd + "sed -i '/^HOSTNAME=/ c \HOSTNAME=" + InstanceName +"' /etc/sysconfig/network\n"
 hostnameCmd= hostnameCmd + "ip=`curl -sf http://169.254.169.254/latest/meta-data/local-ipv4`\n"
-hostnameCmd= hostnameCmd + "echo '${ip} " + InstanceName +" localhost' > /etc/hosts\n"
+hostnameCmd= hostnameCmd + 'echo "${ip} ' + InstanceName +' localhost" > /etc/hosts\n'
 hostnameCmd= hostnameCmd + "echo '127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4' >> /etc/hosts\n"
 userdata=str(base64.b64encode(hostnameCmd))
 
