@@ -214,6 +214,6 @@ wait_for_instance_state(ec2,newInstanceId,"stopped")
 ## Sleep 90 seconds - AWS needs time to adjust its spots status - not sure how to check this
 time.sleep(90)
 ec2.start_instances(InstanceIds=[newInstanceId])
-wait_for_instance_state(ec2,newInstanceId,"started")
+wait_for_instance_state(ec2,newInstanceId,"running")
 
 logging.info ("Conversion Done")
