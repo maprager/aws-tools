@@ -246,3 +246,5 @@ wait_for_instance_state(ec2,newInstanceId,"stopped")
 time.sleep(90)
 ec2.start_instances(InstanceIds=[newInstanceId])
 wait_for_instance_state(ec2,newInstanceId,"running")
+
+logging.info ("Conversion Done")
