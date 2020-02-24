@@ -16,6 +16,30 @@
 ####
 #### Credits:
 ####     Mike Miller for Guidance
+####     Corey Quinn for Guidance
+############################################################################################
+
+### Imports
+import boto3
+#!/usr/bin/python
+#### Script to turn and on demand instance into a spot - any attached volumes will be moved
+#### Version 0.1 18/02/2020 Mark Prager - Initial version
+#### Version 0.2 20/02/2020 Mark Prager - tested on Python 3.6, and added tenacity.
+#### Version 0.3 24/02/2020 Mark Prager - Added additional parameter -o to override the name
+####
+#### Details:
+#### Tested on Python 2.7
+#### Tested on Python 3.6
+#### Converted only Linux (Centos) Servers
+####
+#### Limits:
+#### - does not handle EIPs
+#### - 5 minutes waiting period of AWS operations
+####
+#### Usage: od2spot.py -i <instance-id>
+####
+#### Credits:
+####     Mike Miller for Guidance
 ############################################################################################
 
 ### Imports
@@ -34,7 +58,7 @@ from platform import python_version
 def usage(text):
     if text:
         logging.critical(text)
-    logging.critical("Usage: {0} -i instance-id".format(sys.argv[0]))
+    logging.critical("Usage: {0} -i instance-id [-o override_instance_name]".format(sys.argv[0]))
 
 #### Simple function to pull out the instance name from the tags
 def get_instance_name(tags):
@@ -64,7 +88,7 @@ def wait_for_spot_request_state(client,state,sir):
 def wait_for_instance_state(client,instanceid, state):
     response=ec2.describe_instances(InstanceIds=[instanceid])
     instanceState=(response['Reservations'][0]['Instances'][0]['State']['Name'])
-    logging.info ( "waiting for instance to reach state: %s" % state )
+    logging.info ( "waiting for instance %s to reach state: %s" % (instanceid,state ))
     assert instanceState == state
 
 ### Main
@@ -72,8 +96,13 @@ def wait_for_instance_state(client,instanceid, state):
 ### Read Command Line arguments
 parser = argparse.ArgumentParser(description='Script to convert AWS OnDemand Instances to Persistant Stoppable Spots')
 parser.add_argument('-i', '--instance-id', required=True, help='The instance Id to convert')
+parser.add_argument('-o', '--override', required=False, help='An overriding name for the instance')
 args = vars(parser.parse_args())
 iid = args["instance_id"]
+try:
+   overrideInstanceName=args["override"]
+except:
+   pass
 
 ### Set up logging
 logger = logging.getLogger()
@@ -160,10 +189,12 @@ NetworkInterfaces.append(dict(iface))
 ### If you have specifics for your server - you could place them here.
 ### Alternatively, take this out, and readin the user data from the command line....
 ### Maybe in a later version ... :)
+if overrideInstanceName=="None":
+   overrideInstanceName=InstanceName
 hostnameCmd="#!/bin/bash " + "\n"
-hostnameCmd= hostnameCmd + "sed -i '/^HOSTNAME=/ c \HOSTNAME=" + InstanceName +"' /etc/sysconfig/network\n"
+hostnameCmd= hostnameCmd + "sed -i '/^HOSTNAME=/ c \HOSTNAME=" + overrideInstanceName +"' /etc/sysconfig/network\n"
 hostnameCmd= hostnameCmd + "ip=`curl -sf http://169.254.169.254/latest/meta-data/local-ipv4`\n"
-hostnameCmd= hostnameCmd + 'echo "${ip} ' + InstanceName +' localhost" > /etc/hosts\n'
+hostnameCmd= hostnameCmd + 'echo "${ip} ' + overrideInstanceName +' localhost" > /etc/hosts\n'
 hostnameCmd= hostnameCmd + "echo '127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4' >> /etc/hosts\n"
 ### Different commands in python 2 and 3
 if  sys.version_info < (3, 6 ) :
@@ -215,5 +246,3 @@ wait_for_instance_state(ec2,newInstanceId,"stopped")
 time.sleep(90)
 ec2.start_instances(InstanceIds=[newInstanceId])
 wait_for_instance_state(ec2,newInstanceId,"running")
-
-logging.info ("Conversion Done")
